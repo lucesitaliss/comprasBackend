@@ -22,17 +22,15 @@ config()
 //   },
 // }
 
-// postgres:gWUMwA3fPFgwD0Xnxh7K@containers-us-west-93.railway.app:7524/railway
-// postgresql://postgres:Fgwi3nMwOO1QgpI98Drc@containers-us-west-157.railway.app:7703/railway
-
-module.exports = {
+//postgres:8Ns1Vp8y4CZ181rPiP7D@containers-us-west-94.railway.app:7338/railway
+postgresql: module.exports = {
   PORT: process.env.PORT || 4001,
   db: {
     user: 'postgres',
-    password: 'Fgwi3nMwOO1QgpI98Drc' || '2020',
+    password: '8Ns1Vp8y4CZ181rPiP7D' || '2020',
     host:
       'containers-us-west-containers-us-west-157.railway.app' || 'localhost',
-    port: '7703' || '5432',
+    port: '7338' || '5432',
     database: 'railway' || 'cart',
   },
 }
