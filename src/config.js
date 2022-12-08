@@ -23,7 +23,7 @@ config()
 // }
 
 //postgres:8Ns1Vp8y4CZ181rPiP7D@containers-us-west-94.railway.app:7338/railway
-postgresql: module.exports = {
+module.exports = {
   PORT: process.env.PORT || 4001,
   db: {
     user: 'postgres',
