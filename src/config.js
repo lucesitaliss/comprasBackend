@@ -25,12 +25,12 @@ config()
 // postgres:Od4ya334jz6Ewka5cCpt@containers-us-west-153.railway.app:6481/railway
 
 module.exports = {
-  PORT: process.env.PORT || 4001,
+  PORT: process.env.PORT,
   db: {
-    user: 'postgres',
-    password: 'Od4ya334jz6Ewka5cCpt' || '2020',
-    host: 'containers-us-west-153.railway.app' || 'localhost',
-    port: '6481' || '5432',
-    database: 'railway' || 'cart',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_DATABASE,
   },
 }

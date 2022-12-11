@@ -22,7 +22,8 @@ app.use(cartRoutes)
 app.use(historyCartRoutes)
 
 app.use((error, req, res, next) => {
-  return res.json({ message: error.message })
+  console.log(error)
+  return res.status(500).json({ error: error.message })
 })
 
 app.listen(PORT)

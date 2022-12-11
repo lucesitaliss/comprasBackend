@@ -40,7 +40,7 @@ CREATE TABLE users(
 CREATE TABLE cart(
     id_cart SERIAL PRIMARY KEY,
     product_id integer REFERENCES products (id_product)
-   
+    selected
 );
 
 ALTER TABLE cart ADD COLUMN selected boolean default false;
@@ -108,3 +108,6 @@ para cuando se necesita poner un campo json
     )
 
 
+insertar registreos
+
+INSERT INTO categories (name_category, state_id) VALUES (Limpieza, 1);
