@@ -10,6 +10,7 @@ const getCart = async (req, res, next) => {
       products.id_product,
       products.category_id,
       cart.product_id,
+      hsgdhsgdhsgdhgdh,
       cart.selected,
       cart.id_cart
       FROM categories

@@ -2,6 +2,7 @@ const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const { PORT } = require('./config.js')
+const errors = require('./utils/errors.js')
 
 // const port = 4000
 
@@ -22,8 +23,13 @@ app.use(cartRoutes)
 app.use(historyCartRoutes)
 
 app.use((error, req, res, next) => {
-  console.log(error)
-  return res.status(500).json({ error: error.message })
+  console.error(error)
+  if (errors[error.routine]) {
+    return res
+      .status(errors[error.routine].httpCode)
+      .json({ error: errors[error.rountine].message })
+  }
+  return res.status(500).json(error.message)
 })
 
 app.listen(PORT)

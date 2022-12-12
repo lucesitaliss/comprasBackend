@@ -16,6 +16,7 @@ CREATE TABLE products(
     name_product VARCHAR(255),
     category_id integer REFERENCES categories(id_category),
     state_id integer REFERENCES statuses (id_state)
+    checked boolean
     
 );
 ALTER TABLE products ADD COLUMN checked boolean default false;
@@ -39,8 +40,8 @@ CREATE TABLE users(
 
 CREATE TABLE cart(
     id_cart SERIAL PRIMARY KEY,
-    product_id integer REFERENCES products (id_product)
-    selected
+    product_id integer REFERENCES products (id_product),
+    selected boolean
 );
 
 ALTER TABLE cart ADD COLUMN selected boolean default false;
