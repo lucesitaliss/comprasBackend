@@ -45,12 +45,12 @@ const addCart = async (req, res, next) => {
     const result = await Promise.all(
       idProducts.map(async (product) => {
         return await pool.query(
-          'INSERT INTO cart (product_id) VALUES ($1) WHERE NOT EXISTE (SELECT product_id from cart where product_id) RETURNING*',
+          'INSERT INTO cart (product_id) SELECT $1 WHERE NOT EXISTS (SELECT product_id from cart where product_id= $1) RETURNING*',
           [product.id_product],
         )
       }),
     )
-
+    // 'INSERT INTO cart (product_id) VALUES ($1) WHERE NOT EXISTS (SELECT product_id from cart where product_id= $1) RETURNING*',
     res.json(result.rows)
   } catch (error) {
     next(error)
