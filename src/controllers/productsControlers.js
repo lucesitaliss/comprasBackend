@@ -6,7 +6,7 @@ const getProducts = async (req, res, next) => {
     const result = await pool.query(
       'SELECT * FROM products WHERE state_id=1  ORDER BY name_product',
     )
-   
+
     res.json(result.rows)
   } catch (error) {
     next(error)
@@ -104,7 +104,6 @@ const updateChangeChecked = async (req, res, next) => {
 
 const updateResetCheckedById = async (req, res, next) => {
   const { id } = req.params
-  console.log(id)
 
   const result = pool.query(
     'UPDATE products SET checked=false where id_product =$1 RETURNING*',
@@ -115,8 +114,9 @@ const updateResetCheckedById = async (req, res, next) => {
 
 const updateResetChecked = async (req, res, next) => {
   try {
-    const result = pool.query('UPDATE products SET checked=false')
-    res.json(result.rows[0])
+    const result = await pool.query('UPDATE products SET checked= false')
+    console.log(result)
+    res.json(result.rows)
   } catch (error) {
     next(error)
   }
