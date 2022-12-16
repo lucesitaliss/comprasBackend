@@ -59,9 +59,7 @@ const addCart = async (req, res, next) => {
 
 const updateInvertSeleted = async (req, res, next) => {
   const { id, selected } = req.body
-  if (!id || !selected) {
-    return res.status(400).json({ message: 'Insuficient body arguments' })
-  }
+
   try {
     const result = await pool.query(
       'UPDATE cart SET selected=$1 where id_cart=$2 RETURNING*',
