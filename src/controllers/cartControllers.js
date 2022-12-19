@@ -51,7 +51,11 @@ const addCart = async (req, res, next) => {
       }),
     )
     // 'INSERT INTO cart (product_id) VALUES ($1) WHERE NOT EXISTS (SELECT product_id from cart where product_id= $1) RETURNING*',
-    res.json(result.rows)
+    const cartList = result.map((productCart) => {
+      return productCart.rows[0]
+    })
+
+    res.json(cartList)
   } catch (error) {
     next(error)
   }
