@@ -19,8 +19,7 @@ CREATE TABLE products(
     checked boolean
     
 );
-ALTER TABLE products ADD COLUMN checked boolean default false;
-ALTER TABLE products DROP COLUMN checked; 
+
 
 CREATE TABLE products_seleted(
     id_cart SERIAL PRIMARY KEY,
@@ -35,7 +34,8 @@ CREATE TABLE rol(
 CREATE TABLE users(
     id_user SERIAL PRIMARY key,
     name_user VARCHAR(255) UNIQUE,
-    rol_id integer REFERENCES rol(id_rol)
+    rol_id integer REFERENCES rol(id_rol),
+    password  VARCHAR(255)
 );
 
 CREATE TABLE cart(
@@ -58,7 +58,7 @@ CREATE TABLE history_cart (
 
 
 
-Insert
+ ***Insertar registros***
  
  INSERT INTO statuses (name_state)
  VALUES ('activo');
@@ -70,11 +70,16 @@ Insert
  values (2);
 
 
-
-
 INSERT INTO history_cart (product_id, fecha)
 select product_id,  current_timestamp from cart;
 
+****Agregar colomnas****
+
+ALTER TABLE products ADD COLUMN checked boolean default false;
+ALTER TABLE products DROP COLUMN checked; 
+
+*****modificar registros***
+ 'UPDATE products SET name_product = nuevoNombre WHERE id_product =id;
 
 Querys
 
