@@ -4,7 +4,7 @@ const { capitalize } = require('../utils/strings')
 const getProducts = async (req, res, next) => {
   try {
     const result = await pool.query(
-      'SELECT * FROM products WHERE state_id=1  ORDER BY name_product',
+      'SELECT * FROM products WHERE state_id=1  ORDER BY product_name',
     )
 
     res.json(result.rows)
@@ -17,7 +17,7 @@ const getProductById = async (req, res, next) => {
   const { id } = req.params
   try {
     const result = await pool.query(
-      'SELECT * FROM products WHERE id_product = $1',
+      'SELECT * FROM products WHERE product_id = $1',
       [id],
     )
     res.json(result.rows[0])
@@ -27,17 +27,17 @@ const getProductById = async (req, res, next) => {
 }
 
 const getProductsByCategory = async (req, res, next) => {
-  const { id_category } = req.params
+  const { category_id } = req.params
   try {
     const result = await pool.query(
       `
     SELECT * 
     FROM products
-    JOIN categories ON categories.id_category = products.category_id
-    where categories.id_category = $1 and products.state_id=1 
-    ORDER BY name_product
+    JOIN categories ON categories.category_id = products.category_id
+    where categories.category_id = $1 and products.state_id=1 
+    ORDER BY product_name
     `,
-      [id_category],
+      [category_id],
     )
     res.json(result.rows)
   } catch (error) {
@@ -50,7 +50,7 @@ const insertProduct = async (req, res, next) => {
 
   try {
     const result = await pool.query(
-      'INSERT INTO products(name_product, category_id, state_id) VALUES ($1, $2, 1) RETURNING*',
+      'INSERT INTO products(product_name, category_id, state_id) VALUES ($1, $2, 1) RETURNING*',
       [capitalize(product), category],
     )
 
@@ -65,7 +65,7 @@ const updateProduct = async (req, res, next) => {
   console.log(product, id)
   try {
     const result = await pool.query(
-      'UPDATE products SET name_product = $1 WHERE id_product = $2 RETURNING*',
+      'UPDATE products SET product_name = $1 WHERE product_id = $2 RETURNING*',
       [capitalize(product), id],
     )
 
@@ -79,7 +79,7 @@ const getCheckedById = async (req, res, next) => {
   try {
     const { idProduct } = req.params
     const result = await pool.query(
-      'SELECT checked from products where id_product = $1 ',
+      'SELECT checked from products where product_id = $1 ',
       [idProduct],
     )
     res.json(result.rows[0])
@@ -90,10 +90,10 @@ const getCheckedById = async (req, res, next) => {
 
 const updateChangeChecked = async (req, res, next) => {
   try {
-    const { valueChecked, idProduct } = req.body
+    const { checkedValue, productId } = req.body
     const result = await pool.query(
-      'UPDATE products SET checked=$1 where id_product=$2 RETURNING*',
-      [valueChecked, idProduct],
+      'UPDATE products SET checked=$1 where product_id=$2 RETURNING*',
+      [checkedValue, productId],
     )
 
     res.json(result.rows)
@@ -106,7 +106,7 @@ const updateResetCheckedById = async (req, res, next) => {
   const { id } = req.params
 
   const result = pool.query(
-    'UPDATE products SET checked=false where id_product =$1 RETURNING*',
+    'UPDATE products SET checked=false where product_id =$1 RETURNING*',
     [id],
   )
   res.json((await result).rows[0])
@@ -126,7 +126,7 @@ const updateDeleteProduct = async (req, res, next) => {
   const { id } = req.body
   try {
     const result = await pool.query(
-      'UPDATE products SET state_id =2 WHERE id_product = $1 RETURNING*',
+      'UPDATE products SET state_id =2 WHERE product_id = $1 RETURNING*',
       [id],
     )
 
@@ -140,7 +140,7 @@ const deleteProduct = async (req, res, next) => {
   const { id } = req.params
   try {
     const result = await pool.query(
-      'DELETE FROM products WHERE id_product = $1 RETURNING*',
+      'DELETE FROM products WHERE product_id = $1 RETURNING*',
       [id],
     )
     res.json(result.rows[0])

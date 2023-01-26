@@ -6,15 +6,15 @@ CREATE TABLE statuses (
 );
 
 CREATE TABLE categories(
-    id_category SERIAL PRIMARY KEY,
-    name_category VARCHAR(255),
+    category_id SERIAL PRIMARY KEY,
+    category_name VARCHAR(255),
     state_id integer REFERENCES statuses (id_state)
 );
 
 CREATE TABLE products(
-    id_product SERIAL PRIMARY KEY,
-    name_product VARCHAR(255),
-    category_id integer REFERENCES categories(id_category),
+    product_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(255),
+    category_id integer REFERENCES categories(category_id),
     state_id integer REFERENCES statuses (id_state)
     checked boolean
     
@@ -22,7 +22,7 @@ CREATE TABLE products(
 
 
 CREATE TABLE products_seleted(
-    id_cart SERIAL PRIMARY KEY,
+    cart_id SERIAL PRIMARY KEY,
     products_select jsonb
 ); 
 
@@ -39,8 +39,8 @@ CREATE TABLE users(
 );
 
 CREATE TABLE cart(
-    id_cart SERIAL PRIMARY KEY,
-    product_id integer REFERENCES products (id_product),
+    cart_id SERIAL PRIMARY KEY,
+    product_id integer REFERENCES products (product_id),
     selected boolean
 );
 
@@ -50,7 +50,7 @@ ALTER TABLE cart ADD COLUMN selected boolean default false;
 
 CREATE TABLE history_cart (
     id_historycart SERIAL PRIMARY KEY,
-    product_id integer REFERENCES products (id_product),
+    product_id integer REFERENCES products (product_id),
     fecha DATE
 );
 
@@ -79,28 +79,28 @@ ALTER TABLE products ADD COLUMN checked boolean default false;
 ALTER TABLE products DROP COLUMN checked; 
 
 *****modificar registros***
- 'UPDATE products SET name_product = nuevoNombre WHERE id_product =id;
+ 'UPDATE products SET product_name = nuevoNombre WHERE product_id =id;
 
 Querys
 
 SELECT * FROM categories;
 
 Todas las categorias y productos Activos
- SELECT categories.id_category,
-  categories.name_category, 
-  products.name_product,
-  products.id_product,
+ SELECT categories.category_id,
+  categories.category_name, 
+  products.product_name,
+  products.product_id,
   products.category_id,
   cart.product_id 
   FROM categories
-  JOIN products ON categories.id_category = products.category_id
-  JOIN cart ON cart.product_id = products.id_product;
+  JOIN products ON categories.category_id = products.category_id
+  JOIN cart ON cart.product_id = products.product_id;
 
 Producto de una categoria
 SELECT * 
 FROM products
-JOIN categories ON categories.id_category = products.category_id
-where categories.id_category =1;
+JOIN categories ON categories.category_id = products.category_id
+where categories.category_id =1;
 
 
 
@@ -116,4 +116,4 @@ para cuando se necesita poner un campo json
 
 insertar registreos
 
-INSERT INTO categories (name_category, state_id) VALUES (Limpieza, 1);
+INSERT INTO categories (category_name, state_id) VALUES (Limpieza, 1);

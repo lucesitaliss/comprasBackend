@@ -16,7 +16,7 @@ const {
 
 router.get('/products', getProducts)
 router.get('/product/:id', getProductById)
-router.get('/products/category/:id_category', getProductsByCategory)
+router.get('/products/category/:category_id', getProductsByCategory)
 router.post('/product', insertProduct)
 router.put('/product', updateProduct)
 router.get('/product/checked/id/:idProduct', getCheckedById)
