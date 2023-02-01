@@ -1,9 +1,9 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const jwt = require('jsonwebtoken')
 
 //Configuración del socket
-
 const { Server } = require('socket.io')
 const http = require('http')
 const server = http.createServer(app)
@@ -17,7 +17,6 @@ const morgan = require('morgan')
 
 const { PORT } = require('./config.js')
 const errors = require('./utils/errors.js')
-// const cookieparser = require('cookie-parser')
 const session = require('express-session')
 
 const categoriaRoutes = require('./routes/category.routes')
@@ -31,19 +30,17 @@ app.use(morgan('dev'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-// app.use(cookieparser())
-
-app.use(
-  session({
-    name: 'sid',
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: false,
-    // cookie: {
-    //   maxAge: 1000 * 60 * 60 * 2, // 2 horas la duración de la cookie
-    // },
-  }),
-)
+// app.use(
+//   session({
+//     name: 'sid',
+//     secret: 'secret',
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//       maxAge: 1000 * 60 * 60 * 2, // 2 horas la duración de la cookie
+//     },
+//   }),
+// )
 
 app.use(categoriaRoutes)
 app.use(productRoutes)

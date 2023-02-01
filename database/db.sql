@@ -117,3 +117,4 @@ para cuando se necesita poner un campo json
 insertar registreos
 
 INSERT INTO categories (category_name, state_id) VALUES (Limpieza, 1);
+

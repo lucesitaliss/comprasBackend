@@ -39,3 +39,10 @@ CREATE TABLE cart(
  VALUES ('activo');
  INSERT INTO statuses (state_name)
  VALUES ('inactivo');
+
+
+
+*****Datos de prueba usuarios
+INSERT INTO users (user_name, password) VALUES ('lissette', '12345');
+INSERT INTO users (user_name, password) VALUES ('lianel', '12345');
+INSERT INTO users (user_name, password) VALUES ('martica', '12345');
