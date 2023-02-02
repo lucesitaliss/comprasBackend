@@ -7,11 +7,11 @@ const jwt = require('jsonwebtoken')
 const { Server } = require('socket.io')
 const http = require('http')
 const server = http.createServer(app)
-const io = new Server(server, {
-  cors: {
-    origin: '*',
-  },
-})
+// const io = new Server(server, {
+//   cors: {
+//     origin: '*',
+//   },
+// })
 
 const morgan = require('morgan')
 
@@ -23,6 +23,7 @@ const categoriaRoutes = require('./routes/category.routes')
 const productRoutes = require('./routes/productRoutes')
 const cartRoutes = require('./routes/cartRoutes')
 const historyCartRoutes = require('./routes/historyCartRoutes')
+
 const usersRouter = require('./routes/usersRouter')
 
 app.use(cors())
