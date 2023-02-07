@@ -13,17 +13,18 @@ const {
   deleteProduct,
   getProductsByCategory,
 } = require('../controllers/productsControlers')
+const {verifyToken} = require('../middlewares/authJwt')
 
 router.get('/products', getProducts)
 router.get('/product/:id', getProductById)
-router.get('/products/category/:category_id', getProductsByCategory)
-router.post('/product', insertProduct)
+router.get('/products/category/:category_id',verifyToken, getProductsByCategory)
+router.post('/product', verifyToken, insertProduct)
 router.put('/product', updateProduct)
 router.get('/product/checked/id/:idProduct', getCheckedById)
-router.put('/product/checked', updateChangeChecked)
-router.put('/product/checked/reset/id/:id', updateResetCheckedById)
-router.put('/products/checked/reset', updateResetChecked)
-router.put('/product/delete', updateDeleteProduct)
+router.put('/product/checked',verifyToken, updateChangeChecked)
+router.put('/product/checked/reset/id/:id', verifyToken, updateResetCheckedById)
+router.put('/products/checked/reset', verifyToken,  updateResetChecked)
+router.put('/product/delete',verifyToken, updateDeleteProduct)
 router.delete('/product/:id', deleteProduct)
 
 module.exports = router

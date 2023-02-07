@@ -22,7 +22,6 @@ const session = require('express-session')
 const categoriaRoutes = require('./routes/category.routes')
 const productRoutes = require('./routes/productRoutes')
 const cartRoutes = require('./routes/cartRoutes')
-const historyCartRoutes = require('./routes/historyCartRoutes')
 
 const usersRouter = require('./routes/usersRouter')
 
@@ -46,7 +45,6 @@ app.use(express.json())
 app.use(categoriaRoutes)
 app.use(productRoutes)
 app.use(cartRoutes)
-app.use(historyCartRoutes)
 app.use(usersRouter)
 
 // io.on('connection', (socket) => {

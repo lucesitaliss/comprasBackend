@@ -9,11 +9,11 @@ const {
 } = require('../controllers/cartControllers')
 const { verifyToken } = require('../middlewares/authJwt')
 
-router.get('/cart', getCart)
-// router.get('/cart', verifyToken, getCart)
-router.post('/cart', addCart)
-router.put('/cart/', updateInvertSeleted)
-router.delete('/cart/:id', deleteCartById)
-router.delete('/cart', deleteAllCart)
+//router.get('/cart', getCart)
+router.get('/cart', verifyToken, getCart)
+router.post('/cart', verifyToken, addCart)
+router.put('/cart/',verifyToken,  updateInvertSeleted)
+router.delete('/cart/:id', verifyToken,  deleteCartById)
+router.delete('/cart',verifyToken, deleteAllCart)
 
 module.exports = router
