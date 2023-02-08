@@ -46,3 +46,15 @@ CREATE TABLE cart(
 INSERT INTO users (user_name, password) VALUES ('lissette', '12345');
 INSERT INTO users (user_name, password) VALUES ('lianel', '12345');
 INSERT INTO users (user_name, password) VALUES ('martica', '12345');
+
+
+conectar con BD de ElephantSQL
+psql "host=postgres://tvdvvqek:***@motty.db.elephantsql.com/tvdvvqek port=5432 bdname=BD_cart user=tvdvvqek password=TFYW6C10nh4L5DMrfVIhXOZYLysUQBim"
+
+\c "host=postgres://tvdvvqek:TFYW6C10nh4L5DMrfVIhXOZYLysUQBim@motty.db.elephantsql.com port=5453 dbname=postgres user=tvdvvqek password=TFYW6C10nh4L5DMrfVIhXOZYLysUQBim"
+
+\c "host=DB_cart.elephantsql.com port=5453 dbname=Db_cart user=tvdvvqek password=TFYW6C10nh4L5DMrfVIhXOZYLysUQBim"
+
+\c "host=postgres://tvdvvqek:TFYW6C10nh4L5DMrfVIhXOZYLysUQBim@motty.db.elephantsql.com port=5453 dbname=tvdvvqek  user=tvdvvqek password=TFYW6C10nh4L5DMrfVIhXOZYLysUQBim"
+
+\c "host=postgres://motty.db.elephantsql.com port=5453 dbname=tvdvvqek  user=tvdvvqek password=TFYW6C10nh4L5DMrfVIhXOZYLysUQBim"

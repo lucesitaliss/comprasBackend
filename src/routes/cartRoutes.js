@@ -8,7 +8,6 @@ const {
   deleteAllCart,
 } = require('../controllers/cartControllers')
 const { verifyToken } = require('../middlewares/authJwt')
-
 //router.get('/cart', getCart)
 router.get('/cart', verifyToken, getCart)
 router.post('/cart', verifyToken, addCart)
