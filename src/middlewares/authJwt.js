@@ -12,13 +12,13 @@ const verifyToken = async (req, res, next) => {
     decoded.password,
   ])
   if (!dbUser) return res.status(404).send('No user found')
-  
+
   next()
 }
 
-const verifyToken = async (req, res, next) => {
-  next()
-}
+// const verifyToken = async (req, res, next) => {
+//   next()
+// }
 
 module.exports = {
   verifyToken,
