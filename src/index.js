@@ -35,6 +35,6 @@ app.use(express.json())
 //   return res.status(500).json(error.message)
 // })
 
-// app.listen(PORT)
-server.listen(3000)
+app.listen(3000)
+//server.listen(3000)
 console.log(`el puerto ${PORT} es del servidor de backend`)
