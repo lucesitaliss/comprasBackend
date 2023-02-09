@@ -1,5 +1,5 @@
-const express = require('express')
-const app = express()
+// const express = require('express')
+// const app = express()
 // const cors = require('cors')
 // const jwt = require('jsonwebtoken')
 
@@ -18,7 +18,7 @@ const app = express()
 // app.use(cors())
 // app.use(morgan('dev'))
 // app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
+// app.use(express.json())
 
 // app.use(categoriaRoutes)
 // app.use(productRoutes)
@@ -35,6 +35,34 @@ app.use(express.json())
 //   return res.status(500).json(error.message)
 // })
 
-app.listen(3000)
-//server.listen(3000)
-console.log(`el puerto ${PORT} es del servidor de backend`)
+// app.listen(3000)
+// //server.listen(3000)
+// console.log(`el puerto ${PORT} es del servidor de backend`)
+
+//************************************** */
+
+const express = require('express')
+const { Pool } = require('pg')
+const app = express()
+
+const pool = new Pool({
+  user: 'tvdvvqek',
+  host: 'motty.db.elephantsql.com',
+  database: 'tvdvvqek',
+  password: 'TFYW6C10nh4L5DMrfVIhXOZYLysUQBim',
+  port: 5432,
+})
+
+// app.get('/', (req, res) => {
+//   res.send('Hello World!');
+// });
+
+app.get('/', (req, res) => {
+  pool.query('SELECT NOW()', (err, result) => {
+    res.send(`DB time: ${result.rows[0].now}`)
+  })
+})
+const port = 5000
+app.listen(port, () => {
+  console.log(`Listening on port 5000`)
+})
