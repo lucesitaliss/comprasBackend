@@ -4,9 +4,8 @@ const cors = require('cors')
 const jwt = require('jsonwebtoken')
 
 const morgan = require('morgan')
-// const { PORT } = require('./config.js')
+const { PORT } = require('./config.js')
 const errors = require('./utils/errors.js')
-
 
 const categoriaRoutes = require('./routes/category.routes')
 const productRoutes = require('./routes/productRoutes')
