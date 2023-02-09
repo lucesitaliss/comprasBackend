@@ -1,12 +1,12 @@
  const express = require('express')
  const app = express()
-// const cors = require('cors')
-// const jwt = require('jsonwebtoken')
+ const cors = require('cors')
+ const jwt = require('jsonwebtoken')
 
  const morgan = require('morgan')
 
 // const { PORT } = require('./config.js')
-// const errors = require('./utils/errors.js')
+ const errors = require('./utils/errors.js')
 // const session = require('express-session')
 
 // const categoriaRoutes = require('./routes/category.routes')
