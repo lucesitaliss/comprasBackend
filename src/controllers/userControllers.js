@@ -2,11 +2,21 @@ const pool = require('../db')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { capitalize } = require('../utils/strings')
+const { query } = require('express')
 
 const encryptPassword = async (password) => {
   const salt = await bcrypt.genSalt()
   const hashedPassword = await bcrypt.hash(password, salt)
   return hashedPassword
+}
+
+const getUsers = async (req, res) => {
+  try {
+    const users = await pool.query('SELECT * FROM users')
+    res.status(200).json(users.rows)
+  } catch (error) {
+    res.status(500).send(error)
+  }
 }
 
 const postUser = async (req, res) => {
@@ -58,9 +68,47 @@ const postLogin = async (req, res) => {
   }
 }
 
+const updateUser = async (req, res) => {
+  const { user, id } = req.body
+
+  if (!user || !id) {
+    return res.status(404).send('There are no modification values')
+  }
+  try {
+    const updatedUser = await pool.query(
+      'UPDATE users SET user_name = $1 WHERE user_id = $2RETURNING*',
+      [capitalize(user), id],
+    )
+    res.status(200).json(updatedUser.rows[0])
+  } catch (error) {
+    res.status(500).send(error)
+  }
+}
+
+const deleteUserbyId = async (req, res) => {
+  const { id } = req.params
+
+  if (!id) {
+    return res.send(404).send('the user to delete is not specified')
+  }
+
+  try {
+    const deletedUser = await pool.query(
+      'DELETE FROM users WHERE user_id=$1 RETURNING*',
+      [id],
+    )
+    res.status(200).json(deletedUser.rows[0])
+  } catch (error) {
+    res.status(500).send(error)
+  }
+}
+
 const getPruebaAut = (req, res, next) => {}
 
 module.exports = {
+  getUsers,
   postUser,
   postLogin,
+  updateUser,
+  deleteUserbyId,
 }
