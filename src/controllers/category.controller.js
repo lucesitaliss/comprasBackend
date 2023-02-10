@@ -4,7 +4,7 @@ const { capitalize } = require('../utils/strings')
 const getCategories = async (req, res, next) => {
   try {
     const result = await pool.query(
-      'SELECT* FROM categories WHERE state_id = 1 ORDER BY category_id',
+      'SELECT* FROM categories WHERE state_id = 1 ORDER BY category_name',
     )
     res.status(200).json(result.rows)
   } catch (error) {

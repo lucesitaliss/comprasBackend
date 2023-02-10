@@ -50,9 +50,8 @@ const addCart = async (req, res, next) => {
         )
       }),
     )
-    // 'INSERT INTO cart (product_id) VALUES ($1) WHERE NOT EXISTS (SELECT product_id from cart where product_id= $1) RETURNING*',
-    const cartList = result.map((productCart) => {
-      return productCart.rows[0]
+    const cartList = result.rows.map((productCart) => {
+      return productCart.rows
     })
 
     res.json(cartList)
