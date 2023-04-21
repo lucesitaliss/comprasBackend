@@ -21,10 +21,6 @@ CREATE TABLE products(
 );
 
 
-CREATE TABLE products_seleted(
-    cart_id SERIAL PRIMARY KEY,
-    products_select jsonb
-); 
 
 CREATE TABLE rol(
     id_rol SERIAL PRIMARY KEY,
@@ -32,8 +28,8 @@ CREATE TABLE rol(
 );
 
 CREATE TABLE users(
-    id_user SERIAL PRIMARY key,
-    name_user VARCHAR(255) UNIQUE,
+    user_id SERIAL PRIMARY key,
+    user_name VARCHAR(255) UNIQUE,
     rol_id integer REFERENCES rol(id_rol),
     password  VARCHAR(255)
 );
