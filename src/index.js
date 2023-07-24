@@ -11,25 +11,24 @@ const productRoutes = require('./routes/productRoutes')
 const cartRoutes = require('./routes/cartRoutes')
 const usersRouter = require('./routes/usersRouter')
 
-const allowedOrigins = [
-  'http://localhost:3000/',
-  'https://lucesitaliss.github.io/shopping-list',
-]
-const corsErrorMessage =
-  'The CORS policy for this site does not allow access from the specified Origin.'
+// const allowedOrigins = [
+//   'http://localhost:3000/',
+//   'https://lucesitaliss.github.io/shopping-list',
+// ]
+// const corsErrorMessage =
+//   'The CORS policy for this site does not allow access from the specified Origin.'
+// const corsConfig = {
+//   origin: (origin, callback) => {
+//     if (!origin) return callback(null, true)
+//     if (allowedOrigins.indexOf(origin) === -1) {
+//       return callback(new Error(corsErrorMessage), false)
+//     }
+//     return callback(null, true)
+//   },
+//   credentials: true,
+// }
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true)
-      if (allowedOrigins.indexOf(origin) === -1) {
-        return callback(new Error(corsErrorMessage), false)
-      }
-      return callback(null, true)
-    },
-    credentials: true,
-  }),
-)
+app.use(cors())
 app.use(morgan('dev'))
 app.use(express.json())
 

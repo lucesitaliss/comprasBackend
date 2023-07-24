@@ -59,10 +59,12 @@ const postLogin = async (req, res) => {
     if (await bcrypt.compare(password, dbUserPassword)) {
       const token = jwt.sign(dbUser.rows[0], process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: 86400,
-      }) //jwt.sign({},'',{}) parametros, informacion q quiero pasar, secreto y tiempo de expiracion
+      })
 
       res.json(token)
-    } else res.send('The username or password are not correct')
+    } else {
+      res.send('The username or password are not correct')
+    }
   } catch (error) {
     res.status(500).send(error)
   }
