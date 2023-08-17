@@ -1,5 +1,9 @@
 # Shopping-list is a project with learning porpose
 
+## Start local
+
+npm run dev
+
 ## You can visit the API at this link [https://cart.cyclic.app/]
 
 ### First Steps

@@ -1,4 +1,4 @@
-const { config } = require("dotenv")
+const { config } = require('dotenv')
 config()
 
 // module.exports = {
@@ -15,12 +15,12 @@ config()
 // postgres:Od4ya334jz6Ewka5cCpt@containers-us-west-153.railway.app:6481/railway
 
 module.exports = {
-	PORT: process.env.PORT || 4000,
-	db: {
-		user: process.env.DB_USER,
-		password: process.env.DB_PASSWORD,
-		host: process.env.DB_HOST,
-		port: process.env.DB_PORT,
-		database: process.env.DB_DATABASE,
-	},
+  PORT: process.env.PORT || 4000,
+  db: {
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_DATABASE,
+  },
 }
