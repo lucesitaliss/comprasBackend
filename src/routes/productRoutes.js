@@ -23,12 +23,12 @@ router.get(
   getProductsByCategory,
 )
 router.post('/product', verifyToken, insertProduct)
-router.put('/product', updateProduct)
-router.get('/product/checked/id/:idProduct', getCheckedById)
+router.put('/product', verifyToken, updateProduct)
+router.get('/product/checked/id/:idProduct', verifyToken, getCheckedById)
 router.put('/product/checked', verifyToken, updateChangeChecked)
 router.put('/product/checked/reset/id/:id', verifyToken, updateResetCheckedById)
 router.put('/products/checked/reset', verifyToken, updateResetChecked)
 router.put('/product/delete', verifyToken, updateDeleteProduct)
-router.delete('/product/:id', deleteProduct)
+router.delete('/product/:id', verifyToken, deleteProduct)
 
 module.exports = router
