@@ -12,8 +12,6 @@ config()
 //   },
 // }
 
-// postgres:Od4ya334jz6Ewka5cCpt@containers-us-west-153.railway.app:6481/railway
-
 module.exports = {
   PORT: process.env.PORT || 4000,
   db: {
