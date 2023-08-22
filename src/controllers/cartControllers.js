@@ -51,7 +51,7 @@ const addCart = async (req, res, next) => {
     const insertedItems = await Promise.all(insertionPromises)
     const insertedRows = insertedItems.map((result) => result.rows[0])
 
-    res.json({ message: 'Items added to cart', insertedRows })
+    res.status(200).json({ message: 'Items added to cart', insertedRows })
   } catch (error) {
     next(error)
   }
