@@ -1,5 +1,8 @@
 const pool = require('../db')
-const { validationsProducts } = require('../schemas/products')
+const {
+  validationsProductsAddCart,
+  validationsProductUpdateInvertSeleted,
+} = require('../schemas/cartSchema')
 
 const getCart = async (req, res, next) => {
   try {
@@ -40,7 +43,7 @@ const getCart = async (req, res, next) => {
 }
 
 const addCart = async (req, res, next) => {
-  const products = validationsProducts(req.body)
+  const products = validationsProductsAddCart(req.body)
 
   if (products.error) {
     return res.status(400).json({ error: JSON.parse(products.error.message) })
@@ -59,7 +62,8 @@ const addCart = async (req, res, next) => {
 }
 
 const updateInvertSeleted = async (req, res, next) => {
-  const { id, selected } = req.body
+  const product = validationsProductUpdateInvertSeleted(req.body)
+  const { id, selected } = product.data
 
   try {
     const result = await pool.query(
