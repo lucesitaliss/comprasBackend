@@ -1,4 +1,5 @@
 const pool = require('../db')
+const { validationsProducts } = require('../schemas/products')
 
 const getCart = async (req, res, next) => {
   try {
@@ -39,22 +40,22 @@ const getCart = async (req, res, next) => {
 }
 
 const addCart = async (req, res, next) => {
-  try {
-    const products = req.body
+  const products = validationsProducts(req.body)
 
-    const insertionPromises = products.map((product) =>
-      pool.query(
-        'INSERT INTO cart (product_id) SELECT $1 WHERE NOT EXISTS (SELECT product_id from cart where product_id= $1) RETURNING*',
-        [product.product_id],
-      ),
-    )
-    const insertedItems = await Promise.all(insertionPromises)
-    const insertedRows = insertedItems.map((result) => result.rows[0])
-
-    res.status(200).json({ message: 'Items added to cart', insertedRows })
-  } catch (error) {
-    next(error)
+  if (products.error) {
+    return res.status(400).json({ error: JSON.parse(products.error.message) })
   }
+
+  const insertionPromises = products.data.map((product) =>
+    pool.query(
+      'INSERT INTO cart (product_id) SELECT $1 WHERE NOT EXISTS (SELECT product_id from cart where product_id= $1) RETURNING*',
+      [product.product_id],
+    ),
+  )
+  const insertedItems = await Promise.all(insertionPromises)
+  const insertedRows = insertedItems.map((result) => result.rows[0])
+
+  res.status(200).json({ message: 'Items added to cart', insertedRows })
 }
 
 const updateInvertSeleted = async (req, res, next) => {
