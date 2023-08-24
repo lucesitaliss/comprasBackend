@@ -2,7 +2,6 @@ const pool = require('../db')
 const {
   validationsProductsAddCart,
   validationsProductUpdateInvertSeleted,
-  validationsProductCart,
 } = require('../schemas/cartSchema')
 
 const getCart = async (req, res, next) => {
@@ -77,18 +76,16 @@ const updateInvertSeleted = async (req, res, next) => {
 }
 
 const deleteCartById = async (req, res, next) => {
-  const idProductCart = validationsProductCart(req.params.id)
-
-  if (idProductCart.error) {
-    return res
-      .status(400)
-      .json({ error: JSON.parse(idProductCart.error.message) })
+  try {
+    const { id } = req.params
+    const result = await pool.query(
+      'DELETE FROM cart WHERE cart_id = $1 RETURNING*',
+      [id],
+    )
+    res.status(200).json(result.rows[0])
+  } catch (error) {
+    next(error)
   }
-  const result = await pool.query(
-    'DELETE FROM cart WHERE cart_id = $1 RETURNING*',
-    [idProductCart],
-  )
-  res.status(200).json(result.rows[0])
 }
 
 const deleteAllCart = async (req, res, next) => {

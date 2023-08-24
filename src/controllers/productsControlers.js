@@ -1,5 +1,10 @@
 const pool = require('../db')
 const { capitalize } = require('../utils/strings')
+const {
+  validationProductByCategory,
+  validationUpdateProduct,
+  validationsproductUpdateChangeChecked,
+} = require('../schemas/productsSchema')
 
 const getProducts = async (req, res, next) => {
   try {
@@ -45,33 +50,38 @@ const getProductsByCategory = async (req, res, next) => {
 }
 
 const insertProduct = async (req, res, next) => {
-  const { product, category } = req.body
+  const productCategory = validationProductByCategory(req.body)
+  const { product, category } = productCategory.data
 
-  try {
-    const result = await pool.query(
-      'INSERT INTO products(product_name, category_id, state_id) VALUES ($1, $2, 1) RETURNING*',
-      [capitalize(product), category],
-    )
-
-    res.json(result.rows[0])
-  } catch (error) {
-    next(error)
+  if (productCategory.error) {
+    return res
+      .status(400)
+      .json({ error: JSON.parse(productCategory.error.message) })
   }
+
+  const result = await pool.query(
+    'INSERT INTO products(product_name, category_id, state_id) VALUES ($1, $2, 1) RETURNING*',
+    [capitalize(product), category],
+  )
+
+  res.status(200).json(result.rows[0])
 }
 
 const updateProduct = async (req, res, next) => {
-  const { product, id } = req.body
-  console.log(product, id)
-  try {
-    const result = await pool.query(
-      'UPDATE products SET product_name = $1 WHERE product_id = $2 RETURNING*',
-      [capitalize(product), id],
-    )
+  const updateProduct = validationUpdateProduct(req.body)
+  const { product, id } = updateProduct.data
 
-    res.json(result.rows[0])
-  } catch (error) {
-    next(error)
+  if (updateProduct.error) {
+    return res
+      .status(400)
+      .json({ error: JSON.parse(updateProduct.error.message) })
   }
+  const result = await pool.query(
+    'UPDATE products SET product_name = $1 WHERE product_id = $2 RETURNING*',
+    [capitalize(product), id],
+  )
+
+  res.status(200).json(result.rows[0])
 }
 
 const getCheckedById = async (req, res, next) => {
@@ -88,17 +98,22 @@ const getCheckedById = async (req, res, next) => {
 }
 
 const updateChangeChecked = async (req, res, next) => {
-  try {
-    const { checkedValue, productId } = req.body
-    const result = await pool.query(
-      'UPDATE products SET checked=$1 where product_id=$2 RETURNING*',
-      [checkedValue, productId],
-    )
+  // const { checkedValue, productId } = req.body
+  const productUpdateChecked = validationsproductUpdateChangeChecked(req.body)
+  const { checkedValue, productId } = productUpdateChecked.data
 
-    res.json(result.rows)
-  } catch (error) {
-    next(error)
+  if (productUpdateChecked.error) {
+    return res
+      .status(400)
+      .json({ error: JSON.parse(productUpdateChecked.error.message) })
   }
+
+  const result = await pool.query(
+    'UPDATE products SET checked=$1 where product_id=$2 RETURNING*',
+    [checkedValue, productId],
+  )
+
+  res.status(200).json(result.rows)
 }
 
 const updateResetCheckedById = async (req, res, next) => {
