@@ -22,7 +22,16 @@ const validationsProductUpdateInvertSeleted = (product) => {
   return productUpdateInvertSeleted.safeParse(product)
 }
 
+const productCart = z.object({
+  id: z.number().int().positive(),
+})
+
+const validationsProductCart = (product) => {
+  return productCart.safeParse(product)
+}
+
 module.exports = {
   validationsProductsAddCart,
   validationsProductUpdateInvertSeleted,
+  validationsProductCart,
 }
