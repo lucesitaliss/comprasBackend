@@ -4,6 +4,7 @@ const {
   validationProductByCategory,
   validationUpdateProduct,
   validationsproductUpdateChangeChecked,
+  validationupdateDeleteProduct,
 } = require('../schemas/productsSchema')
 
 const getProducts = async (req, res, next) => {
@@ -11,7 +12,7 @@ const getProducts = async (req, res, next) => {
     const result = await pool.query(
       'SELECT * FROM products WHERE state_id=1  ORDER BY product_name',
     )
-    res.json(result.rows)
+    res.sttaus(200).json(result.rows)
   } catch (error) {
     next(error)
   }
@@ -24,7 +25,7 @@ const getProductById = async (req, res, next) => {
       'SELECT * FROM products WHERE product_id = $1',
       [id],
     )
-    res.json(result.rows[0])
+    res.status(200).json(result.rows[0])
   } catch (error) {
     next(error)
   }
@@ -91,14 +92,13 @@ const getCheckedById = async (req, res, next) => {
       'SELECT checked from products where product_id = $1 ',
       [idProduct],
     )
-    res.json(result.rows[0])
+    res.status(200).json(result.rows[0])
   } catch (error) {
     next(error)
   }
 }
 
 const updateChangeChecked = async (req, res, next) => {
-  // const { checkedValue, productId } = req.body
   const productUpdateChecked = validationsproductUpdateChangeChecked(req.body)
   const { checkedValue, productId } = productUpdateChecked.data
 
@@ -117,13 +117,16 @@ const updateChangeChecked = async (req, res, next) => {
 }
 
 const updateResetCheckedById = async (req, res, next) => {
-  const { id } = req.params
-
-  const result = pool.query(
-    'UPDATE products SET checked=false where product_id =$1 RETURNING*',
-    [id],
-  )
-  res.json((await result).rows[0])
+  try {
+    const { id } = req.params
+    const result = pool.query(
+      'UPDATE products SET checked=false where product_id =$1 RETURNING*',
+      [id],
+    )
+    res.status(200).json((await result).rows[0])
+  } catch (error) {
+    next(error)
+  }
 }
 
 const updateResetChecked = async (req, res, next) => {
@@ -134,30 +137,34 @@ const updateResetChecked = async (req, res, next) => {
   } catch (error) {
     next(error)
   }
+  res.status(200)
 }
 
 const updateDeleteProduct = async (req, res, next) => {
-  const { id } = req.body
-  try {
-    const result = await pool.query(
-      'UPDATE products SET state_id =2 WHERE product_id = $1 RETURNING*',
-      [id],
-    )
+  const deletedProduct = validationupdateDeleteProduct(req.body)
+  const { id } = deletedProduct.data
 
-    res.json(result.rows[0])
-  } catch (error) {
-    next(error)
+  if (deletedProduct.error) {
+    return res
+      .status(400)
+      .json({ error: JSON.parse(deletedProduct.error.message) })
   }
+  const result = await pool.query(
+    'UPDATE products SET state_id =2 WHERE product_id = $1 RETURNING*',
+    [id],
+  )
+
+  res.status(200).json(result.rows[0])
 }
 
 const deleteProduct = async (req, res, next) => {
-  const { id } = req.params
   try {
+    const { id } = req.params
     const result = await pool.query(
       'DELETE FROM products WHERE product_id = $1 RETURNING*',
       [id],
     )
-    res.json(result.rows[0])
+    res.status(200).json(result.rows[0])
   } catch (error) {
     next(error)
   }

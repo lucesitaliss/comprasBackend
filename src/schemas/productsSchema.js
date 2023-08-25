@@ -27,8 +27,17 @@ const validationsproductUpdateChangeChecked = (product) => {
   return productUpdateChangeChecked.safeParse(product)
 }
 
+const updateDeleteProduct = zod.object({
+  id: zod.number().int().positive(),
+})
+
+const validationupdateDeleteProduct = (product) => {
+  return updateDeleteProduct.safeParse(product)
+}
+
 module.exports = {
   validationProductByCategory,
   validationUpdateProduct,
   validationsproductUpdateChangeChecked,
+  validationupdateDeleteProduct,
 }
