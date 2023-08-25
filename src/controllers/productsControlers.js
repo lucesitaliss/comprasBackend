@@ -12,7 +12,7 @@ const getProducts = async (req, res, next) => {
     const result = await pool.query(
       'SELECT * FROM products WHERE state_id=1  ORDER BY product_name',
     )
-    res.sttaus(200).json(result.rows)
+    res.status(200).json(result.rows)
   } catch (error) {
     next(error)
   }
