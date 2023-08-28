@@ -59,13 +59,16 @@ const insertProduct = async (req, res, next) => {
       .status(400)
       .json({ error: JSON.parse(productCategory.error.message) })
   }
+  try {
+    const result = await pool.query(
+      'INSERT INTO products(product_name, category_id, state_id) VALUES ($1, $2, 1) RETURNING*',
+      [capitalize(product), category],
+    )
 
-  const result = await pool.query(
-    'INSERT INTO products(product_name, category_id, state_id) VALUES ($1, $2, 1) RETURNING*',
-    [capitalize(product), category],
-  )
-
-  res.status(200).json(result.rows[0])
+    res.status(200).json(result.rows[0])
+  } catch (error) {
+    return next(error)
+  }
 }
 
 const updateProduct = async (req, res, next) => {
@@ -77,12 +80,17 @@ const updateProduct = async (req, res, next) => {
       .status(400)
       .json({ error: JSON.parse(updateProduct.error.message) })
   }
-  const result = await pool.query(
-    'UPDATE products SET product_name = $1 WHERE product_id = $2 RETURNING*',
-    [capitalize(product), id],
-  )
 
-  res.status(200).json(result.rows[0])
+  try {
+    const result = await pool.query(
+      'UPDATE products SET product_name = $1 WHERE product_id = $2 RETURNING*',
+      [capitalize(product), id],
+    )
+
+    res.status(200).json(result.rows[0])
+  } catch (error) {
+    return next(error)
+  }
 }
 
 const getCheckedById = async (req, res, next) => {
@@ -107,13 +115,16 @@ const updateChangeChecked = async (req, res, next) => {
       .status(400)
       .json({ error: JSON.parse(productUpdateChecked.error.message) })
   }
+  try {
+    const result = await pool.query(
+      'UPDATE products SET checked=$1 where product_id=$2 RETURNING*',
+      [checkedValue, productId],
+    )
 
-  const result = await pool.query(
-    'UPDATE products SET checked=$1 where product_id=$2 RETURNING*',
-    [checkedValue, productId],
-  )
-
-  res.status(200).json(result.rows)
+    res.status(200).json(result.rows)
+  } catch (error) {
+    return next(error)
+  }
 }
 
 const updateResetCheckedById = async (req, res, next) => {
@@ -149,12 +160,16 @@ const updateDeleteProduct = async (req, res, next) => {
       .status(400)
       .json({ error: JSON.parse(deletedProduct.error.message) })
   }
-  const result = await pool.query(
-    'UPDATE products SET state_id =2 WHERE product_id = $1 RETURNING*',
-    [id],
-  )
+  try {
+    const result = await pool.query(
+      'UPDATE products SET state_id =2 WHERE product_id = $1 RETURNING*',
+      [id],
+    )
 
-  res.status(200).json(result.rows[0])
+    res.status(200).json(result.rows[0])
+  } catch (error) {
+    return next(error)
+  }
 }
 
 const deleteProduct = async (req, res, next) => {

@@ -48,17 +48,20 @@ const addCart = async (req, res, next) => {
   if (products.error) {
     return res.status(400).json({ error: JSON.parse(products.error.message) })
   }
+  try {
+    const insertionPromises = products.data.map((product) =>
+      pool.query(
+        'INSERT INTO cart (product_id) SELECT $1 WHERE NOT EXISTS (SELECT product_id from cart where product_id= $1) RETURNING*',
+        [product.product_id],
+      ),
+    )
+    const insertedItems = await Promise.all(insertionPromises)
+    const insertedRows = insertedItems.map((result) => result.rows[0])
 
-  const insertionPromises = products.data.map((product) =>
-    pool.query(
-      'INSERT INTO cart (product_id) SELECT $1 WHERE NOT EXISTS (SELECT product_id from cart where product_id= $1) RETURNING*',
-      [product.product_id],
-    ),
-  )
-  const insertedItems = await Promise.all(insertionPromises)
-  const insertedRows = insertedItems.map((result) => result.rows[0])
-
-  res.status(200).json({ message: 'Items added to cart', insertedRows })
+    res.status(200).json({ message: 'Items added to cart', insertedRows })
+  } catch (error) {
+    return next(error)
+  }
 }
 
 const updateInvertSeleted = async (req, res, next) => {
@@ -68,11 +71,15 @@ const updateInvertSeleted = async (req, res, next) => {
   if (product.error) {
     return res.status(400).json({ error: JSON.parse(product.error.message) })
   }
-  const result = await pool.query(
-    'UPDATE cart SET selected=$1 where cart_id=$2 RETURNING*',
-    [!selected, id],
-  )
-  res.status(200).json(result)
+  try {
+    const result = await pool.query(
+      'UPDATE cart SET selected=$1 where cart_id=$2 RETURNING*',
+      [!selected, id],
+    )
+    res.status(200).json(result)
+  } catch (error) {
+    return next(error)
+  }
 }
 
 const deleteCartById = async (req, res, next) => {
