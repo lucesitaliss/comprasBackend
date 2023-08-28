@@ -1,5 +1,9 @@
 const pool = require('../db')
 const { capitalize } = require('../utils/strings')
+const {
+  validationsInsertategory,
+  validationUpdateCategory,
+} = require('../schemas/categoriesShema')
 
 const getCategories = async (req, res, next) => {
   try {
@@ -21,7 +25,7 @@ const getCategoryById = async (req, res, next) => {
     )
     if (result.rowCount === 0) {
       return res.status(404).json({
-        message: 'El id de categoría especificado no existe',
+        message: 'The specified category id does not exist',
       })
     }
     res.status(200).json(result.rows[0])
@@ -31,7 +35,14 @@ const getCategoryById = async (req, res, next) => {
 }
 
 const insertCategory = async (req, res, next) => {
-  const { category } = req.body
+  const newCategory = validationsInsertategory(req.body)
+  const { category } = newCategory.data
+
+  if (newCategory.error) {
+    return res
+      .status(400)
+      .json({ error: JSON.parse(newCategory.error.message) })
+  }
 
   try {
     const result = await pool.query(
@@ -46,13 +57,20 @@ const insertCategory = async (req, res, next) => {
 }
 
 const updateCategory = async (req, res, next) => {
-  const { id, category } = req.body
+  const editCategory = validationUpdateCategory(req.body)
+  const { id, category } = editCategory.data
+
+  if (editCategory.error) {
+    return res
+      .status(400)
+      .json({ error: JSON.parse(editCategory.error.message) })
+  }
   try {
     const result = await pool.query(
       'UPDATE categories SET category_name = $1 WHERE category_id = $2 RETURNING *',
       [capitalize(category), id],
     )
-    res.json(result.rows[0])
+    res.status(200).json(result.rows[0])
   } catch (error) {
     return next(error)
   }

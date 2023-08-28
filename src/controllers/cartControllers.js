@@ -1,4 +1,8 @@
 const pool = require('../db')
+const {
+  validationsProductsAddCart,
+  validationsProductUpdateInvertSeleted,
+} = require('../schemas/cartSchema')
 
 const getCart = async (req, res, next) => {
   try {
@@ -39,10 +43,13 @@ const getCart = async (req, res, next) => {
 }
 
 const addCart = async (req, res, next) => {
-  try {
-    const products = req.body
+  const products = validationsProductsAddCart(req.body)
 
-    const insertionPromises = products.map((product) =>
+  if (products.error) {
+    return res.status(400).json({ error: JSON.parse(products.error.message) })
+  }
+  try {
+    const insertionPromises = products.data.map((product) =>
       pool.query(
         'INSERT INTO cart (product_id) SELECT $1 WHERE NOT EXISTS (SELECT product_id from cart where product_id= $1) RETURNING*',
         [product.product_id],
@@ -51,23 +58,27 @@ const addCart = async (req, res, next) => {
     const insertedItems = await Promise.all(insertionPromises)
     const insertedRows = insertedItems.map((result) => result.rows[0])
 
-    res.json({ message: 'Items added to cart', insertedRows })
+    res.status(200).json({ message: 'Items added to cart', insertedRows })
   } catch (error) {
-    next(error)
+    return next(error)
   }
 }
 
 const updateInvertSeleted = async (req, res, next) => {
-  const { id, selected } = req.body
+  const product = validationsProductUpdateInvertSeleted(req.body)
+  const { id, selected } = product.data
 
+  if (product.error) {
+    return res.status(400).json({ error: JSON.parse(product.error.message) })
+  }
   try {
     const result = await pool.query(
       'UPDATE cart SET selected=$1 where cart_id=$2 RETURNING*',
       [!selected, id],
     )
-    res.json(result)
+    res.status(200).json(result)
   } catch (error) {
-    next(error)
+    return next(error)
   }
 }
 
@@ -78,7 +89,7 @@ const deleteCartById = async (req, res, next) => {
       'DELETE FROM cart WHERE cart_id = $1 RETURNING*',
       [id],
     )
-    res.json(result.rows[0])
+    res.status(200).json(result.rows[0])
   } catch (error) {
     next(error)
   }

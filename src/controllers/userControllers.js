@@ -2,7 +2,10 @@ const pool = require('../db')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { capitalize } = require('../utils/strings')
-const { query } = require('express')
+const {
+  validationPostUser,
+  validationUpdateUser,
+} = require('../schemas/userSchema')
 
 const encryptPassword = async (password) => {
   const salt = await bcrypt.genSalt()
@@ -20,7 +23,8 @@ const getUsers = async (req, res) => {
 }
 
 const postUser = async (req, res) => {
-  const { name, password } = req.body
+  const userCredentials = validationPostUser(req.body)
+  const { name, password } = userCredentials.data
 
   if (!name || !password) {
     return res.status(400).send('Required user information ')
@@ -41,10 +45,11 @@ const postUser = async (req, res) => {
 }
 //Autenticacion
 const postLogin = async (req, res) => {
-  const { name, password } = req.body
+  const userCredentials = validationPostUser(req.body)
+  const { name, password } = userCredentials.data
 
   if (!name || !password) {
-    return res.status(400).send('Required user information')
+    return res.status(401).send('Required user information')
   }
   try {
     const dbUser = await pool.query('SELECT * FROM users WHERE user_name= $1', [
@@ -52,18 +57,17 @@ const postLogin = async (req, res) => {
     ])
 
     if (!dbUser.rows[0]) {
-      return res.status(400).send('Credenciales Incorrectas')
+      return res.status(402).send('Incorrect Credentials')
     }
     const dbUserPassword = dbUser.rows[0].password
 
     if (await bcrypt.compare(password, dbUserPassword)) {
       const token = jwt.sign(dbUser.rows[0], process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: 86400,
+        expiresIn: 7200, //2 horas, (segundos)7200
       })
-
-      res.json(token)
+      res.status(200).json(token)
     } else {
-      res.send('The username or password are not correct')
+      res.status(403).send('The username or password are not correct')
     }
   } catch (error) {
     res.status(500).send(error)
@@ -71,8 +75,8 @@ const postLogin = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-  const { user, id } = req.body
-
+  const dataUser = validationUpdateUser(req.body)
+  const { user, id } = dataUser.data
   if (!user || !id) {
     return res.status(404).send('There are no modification values')
   }
@@ -104,8 +108,6 @@ const deleteUserbyId = async (req, res) => {
     res.status(500).send(error)
   }
 }
-
-const getPruebaAut = (req, res, next) => {}
 
 module.exports = {
   getUsers,
