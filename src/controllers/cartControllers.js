@@ -94,6 +94,15 @@ const deleteCartById = async (req, res, next) => {
     next(error)
   }
 }
+const deleteSelectedCarts = async (req, res, next) => {
+  try {
+    const result = await pool.query('DELETE FROM cart WHERE selected = true')
+    console.log('result*******************', result.rows)
+    res.status(200).json(result.rows)
+  } catch (error) {
+    next(error)
+  }
+}
 
 const deleteAllCart = async (req, res, next) => {
   try {
@@ -109,5 +118,6 @@ module.exports = {
   addCart,
   updateInvertSeleted,
   deleteCartById,
+  deleteSelectedCarts,
   deleteAllCart,
 }
