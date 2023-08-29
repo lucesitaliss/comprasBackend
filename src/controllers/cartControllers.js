@@ -13,6 +13,7 @@ const getCart = async (req, res, next) => {
       products.product_name,
       products.product_id,
       products.category_id,
+      products.checked,
       cart.product_id,
       cart.selected,
       cart.cart_id
@@ -97,7 +98,6 @@ const deleteCartById = async (req, res, next) => {
 const deleteSelectedCarts = async (req, res, next) => {
   try {
     const result = await pool.query('DELETE FROM cart WHERE selected = true')
-    console.log('result*******************', result.rows)
     res.status(200).json(result.rows)
   } catch (error) {
     next(error)
