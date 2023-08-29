@@ -109,7 +109,6 @@ const getCheckedById = async (req, res, next) => {
 const updateChangeChecked = async (req, res, next) => {
   const productUpdateChecked = validationsproductUpdateChangeChecked(req.body)
   const { checkedValue, productId } = productUpdateChecked.data
-
   if (productUpdateChecked.error) {
     return res
       .status(400)
@@ -120,10 +119,20 @@ const updateChangeChecked = async (req, res, next) => {
       'UPDATE products SET checked=$1 where product_id=$2 RETURNING*',
       [checkedValue, productId],
     )
-
     res.status(200).json(result.rows)
   } catch (error) {
     return next(error)
+  }
+}
+
+const updateCheckedSelectCart = async (rreq, res, next) => {
+  try {
+    const result = await pool.query(
+      'UPDATE products SET checked = false WHERE product_id IN (SELECT product_id FROM cart WHERE selected=true)RETURNING*',
+    )
+    res.status(200).json(result.rows[0])
+  } catch (error) {
+    next(error)
   }
 }
 
@@ -179,6 +188,8 @@ const deleteProduct = async (req, res, next) => {
       'DELETE FROM products WHERE product_id = $1 RETURNING*',
       [id],
     )
+
+    console.log('result', result)
     res.status(200).json(result.rows[0])
   } catch (error) {
     next(error)
@@ -192,6 +203,7 @@ module.exports = {
   updateProduct,
   getCheckedById,
   updateChangeChecked,
+  updateCheckedSelectCart,
   updateResetCheckedById,
   updateResetChecked,
   updateDeleteProduct,
